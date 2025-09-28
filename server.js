@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const path = require('path');
+const { initWhatsApp } = require('./utils/whatsapp');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -83,12 +84,16 @@ const startServer = async () => {
     await database.connect();
     console.log('✅ Database berhasil terhubung');
 
+    // Init WhatsApp
+    await initWhatsApp();
+
     app.listen(PORT, () => {
       console.log(`🚀 Server berjalan di port ${PORT}`);
       console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
       console.log(`🌐 API Base URL: http://localhost:${PORT}/api`);
       console.log(`💊 Health Check: http://localhost:${PORT}/api/health`);
       console.log(`📊 phpMyAdmin: http://localhost/phpmyadmin (jika tersedia)`);
+      console.log(`📱 WhatsApp bot aktif, scan QR kalau diminta`);
     });
 
   } catch (error) {

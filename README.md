@@ -24,6 +24,13 @@ cd batik-ecommerce/backend
 
 ```bash
 npm install
+npm install @whiskeysockets/baileys --legacy-peer-deps
+npm install @adiwajshing/baileys express mysql2 pino --legacy-peer-deps
+npm install qrcode-terminal --legacy-peer-deps
+npm install @whiskeysockets/baileys pino
+
+
+
 ```
 
 ### 3. Setup Database MySQL

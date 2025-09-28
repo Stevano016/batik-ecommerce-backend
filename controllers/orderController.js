@@ -1,6 +1,7 @@
 const Order = require('../models/Order');
 const { validationResult } = require('express-validator');
 const emailService = require('../utils/emailService');
+const whatsapp = require('../utils/whatsapp'); // import whatsapp service
 
 const orderController = {
   async createOrder(req, res) {
@@ -29,6 +30,23 @@ const orderController = {
           .catch(error => console.log('Admin notification failed:', error.message));
       }
 
+      // Kirim notifikasi WA ke owner
+    // Setelah order berhasil dibuat
+try {
+  await whatsapp.sendMessage(
+    process.env.OWNER_PHONE || '6281575817391',
+    `📦 Pesanan baru #${orderId}\n` +
+    `Nama: ${order_data.customer_name}\n` +
+    `Total: Rp ${order_data.total.toLocaleString('id-ID')}\n` +
+    `Barang: ${items.map(i => i.name).join(', ')}\n` +
+    `Status: pending`
+  );
+  console.log('✅ WhatsApp notification sent to owner');
+} catch (err) {
+  console.log('❌ WhatsApp notification failed:', err.message);
+}
+
+
       res.status(201).json({
         message: 'Pesanan berhasil dibuat',
         order: createdOrder
@@ -46,7 +64,6 @@ const orderController = {
       res.status(500).json({ error: 'Gagal membuat pesanan' });
     }
   },
-
   async getOrders(req, res) {
     try {
       const {
